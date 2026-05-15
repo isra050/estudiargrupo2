@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Guía de Defensa - Gonorrea</title>
+  <style>
+    :root {
+      --color-background-app: #f4f7f9;
+      --color-background-primary: #ffffff;
+      --color-background-secondary: #f8fafc;
+      --color-text-primary: #1e293b;
+      --color-text-secondary: #475569;
+      --color-text-tertiary: #94a3b8;
+      --color-border-tertiary: #e2e8f0;
+      --border-radius-md: 10px;
+      --border-radius-lg: 16px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --accent: #1D7C5E;
+      --accent-light: #E1F5EE;
+      --accent-dark: #0F4F3C;
+      --accent-border: #2EAE84;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-background-app);
+      color: var(--color-text-primary);
+      margin: 0 auto;
+      max-width: 800px;
+    }
+
+    .container { padding: 1rem; }
+
+    .header { padding: 1rem 0; margin-bottom: 1rem; }
+    .header h1 { font-size: 22px; font-weight: 600; color: var(--color-text-primary); line-height: 1.3; }
+    .header p { font-size: 14px; color: var(--color-text-secondary); margin-top: 6px; }
+
+    .tabs-wrapper {
+      position: sticky; top: 0;
+      background: var(--color-background-app);
+      padding: 10px 1rem; z-index: 100;
+      border-bottom: 1px solid var(--color-border-tertiary);
+      margin: 0 -1rem 1.5rem -1rem;
+    }
+    .tabs { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab {
+      flex-shrink: 0; padding: 10px 16px;
+      border-radius: 20px; border: 1px solid var(--color-border-tertiary);
+      background: var(--color-background-primary);
+      font-size: 14px; cursor: pointer; color: var(--color-text-secondary);
+      font-weight: 500; transition: all 0.2s ease;
+    }
+    .tab:active { transform: scale(0.96); }
+    .tab.active {
+      background: var(--accent-light); border-color: var(--accent-border);
+      color: var(--accent-dark); font-weight: 600;
+      box-shadow: 0 2px 4px rgba(29,124,94,0.15);
+    }
+
+    .section { display: none; animation: fadeIn 0.3s ease; }
+    .section.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--color-background-primary);
+      border: 1px solid var(--color-border-tertiary);
+      border-radius: var(--border-radius-lg);
+      padding: 1.25rem; margin-bottom: 1.25rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .card-title {
+      font-size: 15px; font-weight: 600; color: var(--color-text-primary);
+      margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .badge {
+      font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: 600; display: inline-block;
+    }
+    .badge-green  { background: var(--accent-light); color: var(--accent-dark); }
+    .badge-blue   { background: #EEF3FB; color: #2653A3; }
+    .badge-purple { background: #F3EEFB; color: #5A2DA3; }
+
+    .content p  { font-size: 15px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 0.5rem; }
+    .content ul { padding-left: 1.4rem; margin-top: 0.5rem; }
+    .content li { font-size: 15px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 8px; }
+    .content strong { color: var(--color-text-primary); font-weight: 600; }
+
+    .author-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px; margin-bottom: 1.5rem;
+    }
+    .author-card {
+      background: var(--color-background-primary); border-radius: var(--border-radius-md);
+      padding: 1rem; cursor: pointer; border: 1px solid var(--color-border-tertiary);
+      transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.02); text-align: center;
+    }
+    .author-card:active { transform: scale(0.98); }
+    .author-card.selected {
+      background: var(--accent-light); border-color: var(--accent-border);
+      box-shadow: 0 2px 6px rgba(29,124,94,0.15);
+    }
+    .author-card .name { font-size: 14px; font-weight: 600; color: var(--color-text-primary); }
+    .author-card .role { font-size: 12px; color: var(--color-text-secondary); margin-top: 4px; }
+    .author-card .ci   { font-size: 11px; color: var(--color-text-tertiary); margin-top: 4px; display: inline-block; background: var(--color-background-app); padding: 2px 6px; border-radius: 4px; }
+
+    .author-content { display: none; animation: fadeIn 0.3s ease; }
+    .author-content.active { display: block; }
+
+    .topic-block {
+      border-left: 4px solid var(--accent);
+      padding: 1rem; background: var(--color-background-primary);
+      border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+      margin-bottom: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .topic-block h3 { font-size: 16px; font-weight: 600; color: var(--color-text-primary); margin-bottom: 8px; }
+    .topic-block p  { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+
+    .qa-item {
+      border: 1px solid var(--color-border-tertiary); border-radius: var(--border-radius-md);
+      margin-bottom: 12px; overflow: hidden;
+      background: var(--color-background-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .qa-question {
+      padding: 1rem; cursor: pointer; font-size: 14px; font-weight: 600;
+      color: var(--color-text-primary); display: flex; justify-content: space-between;
+      align-items: center; user-select: none;
+    }
+    .qa-question:active { background: var(--color-background-secondary); }
+    .qa-arrow { font-size: 14px; color: var(--color-text-tertiary); transition: transform 0.3s ease; flex-shrink: 0; margin-left: 8px; }
+    .qa-answer { display: none; padding: 0 1rem 1rem 1rem; font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+    .qa-answer.open { display: block; animation: fadeIn 0.3s ease; }
+    .qa-arrow.open  { transform: rotate(180deg); color: var(--accent); }
+
+    .data-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px; margin: 1rem 0;
+    }
+    .data-stat {
+      background: var(--color-background-primary); border-radius: var(--border-radius-md);
+      padding: 1rem 0.5rem; text-align: center;
+      border: 1px solid var(--color-border-tertiary); box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .data-stat .val { font-size: 24px; font-weight: 700; color: var(--accent-dark); }
+    .data-stat .lbl { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); margin-top: 4px; line-height: 1.3; }
+
+    .tip-box, .warn-box {
+      border-radius: var(--border-radius-md); padding: 1rem; margin: 1rem 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .tip-box  { background: var(--accent-light); border-left: 4px solid var(--accent); }
+    .tip-box p  { font-size: 14px; color: var(--accent-dark); line-height: 1.6; font-weight: 500; }
+    .warn-box { background: #FAEEDA; border-left: 4px solid #854F0B; }
+    .warn-box p { font-size: 14px; color: #854F0B; line-height: 1.6; font-weight: 500; }
+
+    .divider { height: 1px; background: var(--color-border-tertiary); margin: 1.5rem 0; }
+    .section-label { font-size: 14px; font-weight: 600; color: var(--color-text-secondary); margin: 16px 0 8px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>Guía de defensa — Consecuencias de la Gonorrea como ETS</h1>
+    <p>U.E.P. Gral. José Laurencio Silva · 5to Año · Maracaibo, Mayo 2026</p>
+  </div>
+
+  <div class="tabs-wrapper">
+    <div class="tabs">
+      <div class="tab active" onclick="showSection('resumen')">Resumen general</div>
+      <div class="tab" onclick="showSection('autores')">Por autor</div>
+      <div class="tab" onclick="showSection('preguntas')">Preguntas del jurado</div>
+      <div class="tab" onclick="showSection('datos')">Datos clave</div>
+      <div class="tab" onclick="showSection('consejos')">Consejos de defensa</div>
+    </div>
+  </div>
+
+  <!-- ─── RESUMEN GENERAL ─── -->
+  <div id="resumen" class="section active">
+
+    <div class="card">
+      <div class="card-title"><span class="badge badge-green">Tema central</span></div>
+      <div class="content">
+        <p>La investigación analiza las <strong>consecuencias de la gonorrea como enfermedad de transmisión sexual (ETS) en los adolescentes del 5to año</strong> de la U.E.P. Gral. José Laurencio Silva, Maracaibo, Estado Zulia, mayo de 2026.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Estructura de la tesis</div>
+      <div class="content">
+        <ul>
+          <li><strong>Capítulo I:</strong> El Problema — planteamiento, formulación, sistematización, objetivos, justificación y delimitación</li>
+          <li><strong>Capítulo II:</strong> Marco Teórico — antecedentes, historia de la gonorrea, definición, transmisión, tipos, causas, síntomas, diagnóstico, consecuencias, bases legales y sistema de variables</li>
+          <li><strong>Capítulo III:</strong> Marco Metodológico — diseño, tipo de investigación, población, muestra (fórmula estadística), encuesta y técnicas de recolección</li>
+          <li><strong>Capítulo IV:</strong> Análisis e interpretación de resultados — 10 ítems con gráficos y análisis</li>
+          <li><strong>Conclusión, Recomendaciones y Bibliografía</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Objetivos específicos <span class="badge badge-green">memorizar</span></div>
+      <div class="content">
+        <ul>
+          <li>Explicar las <strong>causas y consecuencias</strong> de la gonorrea como ETS en adolescentes</li>
+          <li>Exponer a través de <strong>folletos/trípticos</strong> los métodos de prevención para evitar la gonorrea</li>
+          <li>Profundizar el <strong>comportamiento</strong> de los adolescentes sobre los métodos de prevención de las ETS</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Definición de la variable central</div>
+      <div class="content">
+        <p><strong>Gonorrea:</strong> Enfermedad de transmisión sexual causada por la bacteria <em>Neisseria Gonorrhoeae</em>. Infecta las membranas mucosas del cuerpo, principalmente zonas genitales, recto y garganta. Se transmite por relaciones sexuales vaginales, anales u orales sin protección, y de madre a bebé durante el parto.</p>
+        <p><strong>Variable dependiente:</strong> Enfermedad de transmisión sexual gonorrea (afecta las dimensiones: salud, social, emocional).</p>
+        <p><strong>Variable independiente:</strong> Conocimiento sobre la gonorrea — hechos e información adquirida sobre síntomas, causas, consecuencias y tratamiento.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Hallazgo principal</div>
+      <div class="content">
+        <p>El 85% de los encuestados conoce el término gonorrea, pero <strong>el 52% desconoce sus síntomas</strong>, el <strong>63% desconoce sus consecuencias</strong> a largo plazo y el <strong>69% ignora que puede infectar zonas del cuerpo más allá de los genitales</strong>. El 98% apoya que el liceo ofrezca charlas de orientación sexual. La brecha no es de conciencia — es de conocimiento profundo: saben que existe, pero no saben cómo actúa ni qué deja.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── POR AUTOR ─── -->
+  <div id="autores" class="section">
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem;">Selecciona tu número para ver tu tema asignado. Cuando tengas los nombres, puedes reemplazarlos.</p>
+
+    <div class="author-grid">
+      <div class="author-card" onclick="showAuthor('e1')">
+        <div class="name">Estudiante 1</div>
+        <div class="role">Cap. I · Planteamiento del Problema</div>
+        <div class="ci">─────────</div>
+      </div>
+      <div class="author-card" onclick="showAuthor('e2')">
+        <div class="name">Estudiante 2</div>
+        <div class="role">Cap. II · Historia y definición de la Gonorrea</div>
+        <div class="ci">─────────</div>
+      </div>
+      <div class="author-card" onclick="showAuthor('e3')">
+        <div class="name">Estudiante 3</div>
+        <div class="role">Cap. II · Tipos, causas, síntomas y diagnóstico</div>
+        <div class="ci">─────────</div>
+      </div>
+      <div class="author-card" onclick="showAuthor('e4')">
+        <div class="name">Estudiante 4</div>
+        <div class="role">Cap. II · Consecuencias + Bases legales y variables</div>
+        <div class="ci">─────────</div>
+      </div>
+      <div class="author-card" onclick="showAuthor('e5')">
+        <div class="name">Estudiante 5</div>
+        <div class="role">Cap. III · Metodología + Cap. IV · Resultados (ítems 1–5)</div>
+        <div class="ci">─────────</div>
+      </div>
+      <div class="author-card" onclick="showAuthor('e6')">
+        <div class="name">Estudiante 6</div>
+        <div class="role">Cap. IV · Resultados (ítems 6–10) + Conclusiones y Recomendaciones</div>
+        <div class="ci">─────────</div>
+      </div>
+    </div>
+
+    <!-- ESTUDIANTE 1 -->
+    <div id="author-e1" class="author-content">
+      <div class="topic-block" style="border-color:#1D7C5E;">
+        <h3>Estudiante 1 — Capítulo I: Planteamiento del Problema</h3>
+        <p>Eres el encargado de explicar <strong>por qué existe este problema, quiénes lo padecen y por qué vale la pena investigarlo</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Conceptos que debes dominar al hablar</div>
+        <div class="content">
+          <ul>
+            <li><strong>El problema en la institución:</strong> La gonorrea ocurre muy constantemente en adolescentes de 15 a 17 años. Los estilos de crianza rígidos generan pena o miedo ante el tema; los más abiertos llevan a mejor conocimiento y toma de decisiones.</li>
+            <li><strong>Cifras globales:</strong> Más de 80 millones de casos anuales en el mundo. Barbados, Puerto Rico y Jamaica tienen las tasas más altas — más de 30.000 casos por cada 100.000 personas. En Europa, Irlanda lidera con 122 casos por 100.000 habitantes.</li>
+            <li><strong>Venezuela:</strong> La infección gonocócica representa entre el 30% y el 35% de todas las consultas por ITS en centros especializados. El número real es mucho mayor porque muchos se automedican y no entran en estadísticas.</li>
+            <li><strong>Formulación del problema:</strong> ¿Cómo influye la gonorrea en los adolescentes del 5to año de la U.E.P. Gral. José Laurencio Silva?</li>
+            <li><strong>Sistematización:</strong> (1) ¿Cuál es el impacto del mal conocimiento de la gonorrea? (2) ¿Cómo influye la cefalosporina en la gonorrea? (3) ¿Cuáles son las consecuencias?</li>
+            <li><strong>Justificación en 3 planos:</strong> Teórico (profundizar el conocimiento de la ETS), Práctico (conocimiento real de los adolescentes 15–17 años) y Metodológico (sirve como antecedente para futuros estudios).</li>
+            <li><strong>Delimitación:</strong> Adolescentes de 15 a 17 años de la U.E.P. Gral. José Laurencio Silva, Maracaibo, Estado Zulia, abril–mayo 2026.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tip-box"><p>Gancho de apertura: "Venezuela registra entre el 30 y el 35% de todas sus consultas por ITS por gonorrea, y eso solo cuenta a quienes llegan a un centro de salud. Los que se automedican en una farmacia no existen para las estadísticas — pero sí existen en las aulas de nuestra institución."</p></div>
+    </div>
+
+    <!-- ESTUDIANTE 2 -->
+    <div id="author-e2" class="author-content">
+      <div class="topic-block" style="border-color:#2653A3;">
+        <h3>Estudiante 2 — Capítulo II: Historia y definición de la Gonorrea</h3>
+        <p>Eres el encargado de presentar <strong>el origen histórico de la enfermedad, quiénes la descubrieron y qué es científicamente</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Conceptos que debes dominar al hablar</div>
+        <div class="content">
+          <ul>
+            <li><strong>1500 a.C.:</strong> Los griegos documentaron remedios para inflamaciones y secreciones urogenitales que coinciden con la enfermedad.</li>
+            <li><strong>Claudio Galeno (130 d.C.):</strong> Médico griego que le dio el nombre "Gonorrea" — de Gonos (semilla/semen) y Rhoia (flujo). Erróneamente creía que el pus era pérdida involuntaria de semen.</li>
+            <li><strong>1767:</strong> John Hunter demostró que la gonorrea era diferente a la sífilis, que muchos médicos confundían como una sola enfermedad.</li>
+            <li><strong>1879:</strong> Albert Neisser — médico alemán de solo 24 años — identificó la bacteria bajo el microscopio por primera vez. En su honor se llamó <em>Neisseria Gonorrhoeae</em>. También diferenció la gonorrea de la sífilis e investigó las consecuencias a largo plazo, descubriendo que causaba esterilidad.</li>
+            <li><strong>1884:</strong> Hans Gram desarrolló la Tinción de Gram — técnica de coloración fundamental para identificar bacterias en laboratorio.</li>
+            <li><strong>Siglos XIX–XX:</strong> No había cura real. Solo tratamientos dolorosos: inyecciones de nitrato de plata o mercurio.</li>
+            <li><strong>1940–1970:</strong> Llega la penicilina — gran alivio. Pero la bacteria <em>Neisseria Gonorrhoeae</em> demostró ser más fuerte, desarrollando resistencia a cada antibiótico.</li>
+            <li><strong>¿Qué es la gonorrea?:</strong> ETS causada por <em>Neisseria Gonorrhoeae</em>. Infecta membranas mucosas — genitales, recto y garganta principalmente. Se transmite por sexo vaginal, anal u oral sin protección, y de madre infectada a bebé durante el parto (puede causar ceguera en el recién nacido).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tip-box"><p>Gancho para tu exposición: "Albert Neisser tenía solo 24 años cuando descubrió la bacteria que lleva su nombre. Hoy, casi 150 años después, esa bacteria sigue siendo más adaptable que muchos de los antibióticos que hemos creado para eliminarla."</p></div>
+    </div>
+
+    <!-- ESTUDIANTE 3 -->
+    <div id="author-e3" class="author-content">
+      <div class="topic-block" style="border-color:#D85A30;">
+        <h3>Estudiante 3 — Capítulo II: Tipos, causas, síntomas y diagnóstico</h3>
+        <p>Eres el encargado de explicar <strong>cómo se clasifica la enfermedad, por qué se contagia y cómo se detecta</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Conceptos que debes dominar al hablar</div>
+        <div class="content">
+          <ul>
+            <li><strong>6 tipos de gonorrea:</strong>
+              <ul>
+                <li><strong>Urogenital:</strong> La más común — afecta genitales y uretra</li>
+                <li><strong>Anorrectal:</strong> Por sexo anal. Puede ser asintomática o causar picazón, secreción y dolor al evacuar</li>
+                <li><strong>Orofaríngea (garganta):</strong> Por sexo oral. Generalmente sin síntomas, pero puede causar dolor de garganta persistente. Difícil de detectar sin prueba específica</li>
+                <li><strong>Conjuntival (ojos):</strong> En recién nacidos durante el parto o en adultos por contacto de fluidos con los ojos. Puede causar ceguera si no se trata rápido</li>
+                <li><strong>Sensible:</strong> Se cura con antibióticos estándar como la ceftriaxona</li>
+                <li><strong>Supergonorrea:</strong> Cepa mutante resistente a penicilina, tetraciclina y azitromicina — el mayor reto actual de la salud pública</li>
+              </ul>
+            </li>
+            <li><strong>3 causas:</strong> Afinidad por las mucosas (solo sobrevive en tejidos húmedos y cálidos), Fragilidad externa (muere rápido fuera del cuerpo — mito del inodoro o piscina: FALSO) y Sexo sin protección (causa principal: vaginal, anal y oral).</li>
+            <li><strong>Síntomas:</strong> Secreción uretral (líquido espeso amarillo/verde/blanco), Disuria (ardor al orinar), Dolor testicular, Aumento del flujo vaginal, Sangrado intermenstrual, Dolor de garganta persistente, Comezón anal, Dolor ocular y secreción purulenta.</li>
+            <li><strong>3 diagnósticos:</strong> Prueba de orina (más común — detecta bacteria en uretra), Hisopado (muestra de zona afectada con hisopo largo) y Prueba de Amplificación de Ácidos Nucleicos — la más precisa, detecta el ADN de la bacteria.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tip-box"><p>Dato clave para defender: "La gonorrea orofaríngea — la de la garganta — es una de las más difíciles de detectar porque generalmente no produce síntomas visibles. Una persona puede estar infectada en la garganta sin saberlo, y transmitirla sin saberlo."</p></div>
+    </div>
+
+    <!-- ESTUDIANTE 4 -->
+    <div id="author-e4" class="author-content">
+      <div class="topic-block" style="border-color:#D4537E;">
+        <h3>Estudiante 4 — Capítulo II: Consecuencias + Bases legales y Variables</h3>
+        <p>Eres el encargado de explicar <strong>qué le pasa al cuerpo y a la mente de quien no se trata, y el respaldo legal de esta investigación</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Conceptos que debes dominar al hablar</div>
+        <div class="content">
+          <ul>
+            <li><strong>Consecuencias en mujeres:</strong> La bacteria sube al útero y las trompas de Falopio causando Enfermedad Inflamatoria Pélvica (EIP) — cicatrices en trompas, mayor riesgo de embarazo ectópico e infertilidad. Requiere tratamiento inmediato.</li>
+            <li><strong>Consecuencias en hombres:</strong> Inflamación del epidídimo (conducto que almacena y transporta el esperma) — epididimitis — que puede causar infertilidad.</li>
+            <li><strong>Consecuencias sistémicas (ambos sexos):</strong> La bacteria pasa al torrente sanguíneo causando artritis séptica (articulaciones calientes, enrojecidas, hinchadas y dolorosas), fiebre, sarpullidos y llagas en la piel.</li>
+            <li><strong>Consecuencias en ojos y garganta:</strong> Dolor ocular, sensibilidad a la luz, secreción purulenta y posible ceguera. En garganta: dolor e inflamación de ganglios en el cuello.</li>
+            <li><strong>En bebés:</strong> Ceguera, llagas en el cuero cabelludo e infecciones graves al nacer de una madre infectada.</li>
+            <li><strong>Mayor riesgo de VIH:</strong> Padecer gonorrea aumenta significativamente la susceptibilidad al virus del SIDA.</li>
+            <li><strong>Consecuencias emocionales:</strong> Miedo al rechazo, aislamiento social, depresión, ansiedad y en casos extremos ideación suicida. La dimensión emocional es igual de grave que la física.</li>
+            <li><strong>Bases legales:</strong> Art. 83 CRBV (salud como derecho fundamental), Art. 84 CRBV (Estado garantiza prevención de ETS), Art. 9 Ley Orgánica de Salud (Ministerio de Salud regula prevención), Art. 19 (igualdad de acceso sin discriminación), Gaceta Oficial 37.705 de 2003 (protocolos obligatorios para manejo de ITS y educación sexual).</li>
+            <li><strong>Variables:</strong> Dependiente: ETS gonorrea (dimensiones: salud, social, emocional). Independiente: nivel de conocimiento sobre la gonorrea.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tip-box"><p>Gancho para tu exposición: "La gonorrea no termina cuando desaparecen los síntomas físicos. Una persona que la padece puede quedar infértil de por vida sin haberlo sabido, o puede llegar a no querer vivir por el miedo al rechazo. Por eso el Art. 83 de nuestra Constitución dice que la salud es un derecho — porque ignorarla tiene un costo que nadie debería pagar."</p></div>
+    </div>
+
+    <!-- ESTUDIANTE 5 -->
+    <div id="author-e5" class="author-content">
+      <div class="topic-block" style="border-color:#7F4DBF;">
+        <h3>Estudiante 5 — Cap. III: Metodología + Cap. IV: Resultados (ítems 1 al 5)</h3>
+        <p>Eres el encargado de explicar <strong>cómo se diseñó la investigación y los primeros 5 hallazgos de la encuesta</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Conceptos que debes dominar al hablar</div>
+        <div class="content">
+          <ul>
+            <li><strong>Tipo: Descriptiva.</strong> Define características de la gonorrea y la situación de los adolescentes, sin manipular variables. El investigador observa y mide la realidad tal como es.</li>
+            <li><strong>Diseño: De campo.</strong> Datos recogidos directamente en la institución, con los propios estudiantes del 5to año — no con fuentes secundarias.</li>
+            <li><strong>Población: 48 estudiantes</strong> del 5to año de la U.E.P. Gral. José Laurencio Silva. Población finita — se conoce el número exacto.</li>
+            <li><strong>Muestra — fórmula:</strong> n = Z²·p·q·N / [(N-1)e² + Z²·p·q]. Valores: Z=1,96, p=q=0,50, N=48, e=0,05. Resultado: n=42,66 ≈ 43. Se encuestó a los 48 porque la población era pequeña y accesible — eso fortalece la validez.</li>
+            <li><strong>Técnica: Encuesta.</strong> Cuestionario de 10 preguntas Sí/No. Estudio observacional — no modifica el entorno.</li>
+            <li><strong>Ítem 1 — ¿Sabes qué es la gonorrea?:</strong> 85% Sí / 15% No. La mayoría conoce el término, pero el entorno familiar no siempre habla del tema.</li>
+            <li><strong>Ítem 2 — ¿Sabes qué son las ETS?:</strong> 90% Sí / 10% No. Mayor conocimiento del concepto general que de la gonorrea específica.</li>
+            <li><strong>Ítem 3 — ¿Es importante conocer sobre enfermedades?:</strong> 100% Sí. Unanimidad total — todos reconocen la importancia aunque no todos conozcan los detalles.</li>
+            <li><strong>Ítem 4 — ¿Necesita charlas sobre gonorrea?:</strong> 73% Sí / 27% No. Más de 2 de cada 3 reconoce que necesita más información — justifica la intervención propuesta.</li>
+            <li><strong>Ítem 5 — ¿Conoce los síntomas?:</strong> Solo 48% Sí / 52% No. <strong>Primer dato crítico:</strong> la mayoría conoce la enfermedad pero no sabe reconocerla cuando aparece.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tip-box"><p>Dato para defender: "El ítem 5 es el primero que revela la brecha real: el 85% sabe que la gonorrea existe, pero el 52% no sabría reconocerla si tuviera un síntoma. Eso significa que la mitad de los encuestados podría estar infectada sin saberlo."</p></div>
+    </div>
+
+    <!-- ESTUDIANTE 6 -->
+    <div id="author-e6" class="author-content">
+      <div class="topic-block" style="border-color:#0F6E56;">
+        <h3>Estudiante 6 — Cap. IV: Resultados (ítems 6–10) + Conclusiones y Recomendaciones</h3>
+        <p>Eres el encargado de <strong>presentar los hallazgos más importantes, sacar conclusiones e integrar todo el estudio</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Conceptos que debes dominar al hablar</div>
+        <div class="content">
+          <ul>
+            <li><strong>Ítem 6 — ¿Ha recibido información sobre gonorrea?:</strong> 63% Sí / 38% No. Hay que enfocarse en ese 38% que llegó al 5to año sin haber recibido información básica sobre la enfermedad.</li>
+            <li><strong>Ítem 7 — ¿Tiene familiar o amigo infectado?:</strong> Solo 6% Sí / 94% No. No significa que no haya casos — significa que el estigma impide que las personas lo revelen.</li>
+            <li><strong>Ítem 8 — ¿Sabe que infecta más allá de los genitales?:</strong> Solo 31% Sí / <strong>69% No. El dato más alarmante.</strong> Casi 7 de cada 10 ignora que la gonorrea puede afectar garganta, ojos, recto y articulaciones.</li>
+            <li><strong>Ítem 9 — ¿Conoce las consecuencias si no se trata?:</strong> Solo 38% Sí / 63% No. <strong>Segundo dato crítico:</strong> la mayoría no sabe que puede quedar infértil, perder la vista o desarrollar artritis séptica.</li>
+            <li><strong>Ítem 10 — ¿Apoya charlas de orientación sexual en el liceo?:</strong> 98% Sí / 2% No. Casi unanimidad — hay una demanda clara y legítima que la institución debe responder.</li>
+            <li><strong>Conclusión 1:</strong> El conocimiento es superficial — saben que existe pero no cómo actúa, cómo se reconoce ni qué deja.</li>
+            <li><strong>Conclusión 2:</strong> Las consecuencias son físicas Y emocionales — infertilidad, artritis, ceguera, pero también depresión, aislamiento y miedo al rechazo.</li>
+            <li><strong>Conclusión 3:</strong> La institución puede marcar la diferencia — el 98% lo pide y el 73% lo necesita.</li>
+            <li><strong>Recomendaciones:</strong> Investigar por cuenta propia, hacer talleres en la institución, que los padres hablen con sus hijos, distribuir más folletos, enseñar todos los métodos anticonceptivos y su función.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tip-box"><p>Frase de cierre sugerida: "Este proyecto no termina con la nota que nos den hoy. Termina cuando el último estudiante de esta institución comprenda que la gonorrea no es solo una enfermedad de los genitales — es una enfermedad que afecta el cuerpo completo, la mente, las relaciones y la vida. Y que tiene prevención."</p></div>
+    </div>
+  </div>
+
+  <!-- ─── PREGUNTAS DEL JURADO ─── -->
+  <div id="preguntas" class="section">
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem;">Toca cada pregunta para ver la respuesta sugerida.</p>
+
+    <div class="section-label">Preguntas sobre el problema y los conceptos</div>
+
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Qué es exactamente la gonorrea y cuál es su bacteria causante? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">La gonorrea es una enfermedad de transmisión sexual causada por la bacteria <em>Neisseria Gonorrhoeae</em>. Se caracteriza por infectar las membranas mucosas del cuerpo — principalmente las zonas genitales, el recto y la garganta. La bacteria no puede sobrevivir en piel seca ni fuera del cuerpo humano por tiempo prolongado; necesita tejidos húmedos y cálidos. Por eso se transmite exclusivamente por contacto directo entre mucosas: relaciones sexuales vaginales, anales u orales sin protección, o de madre a bebé durante el parto.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Cuál es la diferencia entre gonorrea sensible y supergonorrea? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">La gonorrea sensible es la forma clásica de la enfermedad, que responde al tratamiento con antibióticos estándar como la ceftriaxona. La supergonorrea es una cepa mutante de la bacteria <em>Neisseria Gonorrhoeae</em> que ha desarrollado resistencia a múltiples antibióticos — penicilina, tetraciclina, azitromicina e incluso algunos más modernos. Esta resistencia es el resultado de décadas de uso inadecuado de antibióticos y de la capacidad adaptativa de la bacteria. La supergonorrea es uno de los mayores retos actuales de la salud pública global porque hace que el tratamiento sea mucho más complejo y costoso.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Cuáles son las consecuencias más graves de la gonorrea si no se trata? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">Las consecuencias varían según el sexo. En mujeres: la bacteria puede diseminarse al útero y las trompas de Falopio, causando Enfermedad Inflamatoria Pélvica (EIP) — cicatrices en las trompas, mayor riesgo de embarazo ectópico e infertilidad. En hombres: inflamación del epidídimo (epididimitis), que puede causar infertilidad. En ambos sexos: la bacteria puede diseminarse por el torrente sanguíneo causando artritis séptica (articulaciones calientes, enrojecidas, hinchadas y dolorosas), fiebre, sarpullidos y llagas. En ojos: dolor, sensibilidad a la luz, secreción purulenta y ceguera si no se trata. En bebés nacidos de madres infectadas: ceguera, llagas en el cuero cabelludo e infecciones graves. Además, tener gonorrea aumenta significativamente el riesgo de contraer VIH. Y hay consecuencias emocionales igualmente graves: miedo al rechazo, aislamiento, depresión, ansiedad y en casos extremos ideación suicida.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Es verdad que puedes contagiarte en un baño público o piscina? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">No. Esto es un mito frecuente pero sin base científica. La bacteria <em>Neisseria Gonorrhoeae</em> tiene una característica llamada fragilidad externa: muere rápidamente fuera del cuerpo humano. Necesita el contacto directo entre mucosas húmedas para sobrevivir y transmitirse. No puede vivir en superficies secas como asientos de inodoro, toallas, piscinas o ropa. El contagio requiere necesariamente contacto sexual directo o de madre a bebé durante el parto. Aclarar este mito es uno de los objetivos educativos de nuestra investigación.</div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Preguntas sobre metodología</div>
+
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Por qué usaron una encuesta y no una entrevista? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">La encuesta fue la técnica más adecuada por tres razones. Primero, permite recopilar información de forma estandarizada de una muestra numerosa — 48 estudiantes — en poco tiempo. Segundo, el cuestionario cerrado de Sí/No permite cuantificar y graficar los resultados con precisión, lo que facilita la comparación entre ítems y la interpretación visual de los datos. Tercero, la encuesta preserva la confidencialidad del encuestado al responder, lo cual es especialmente importante en un tema sensible como las ETS — los adolescentes son más honestos cuando no tienen que responder oralmente frente a un investigador.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Cómo calcularon la muestra y por qué encuestaron a 48 si la fórmula dio 43? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">Se aplicó la fórmula estadística para población finita: n = Z²·p·q·N / [(N-1)e² + Z²·p·q], con Z=1,96 (95% de confianza), p=q=0,50 y e=0,05 (5% de error). El resultado fue n=42,66, aproximado a 43. Sin embargo, dado que la población total era de solo 48 estudiantes — un número muy manejable — se tomó la decisión de encuestar a la totalidad de la población en lugar de solo a la muestra calculada. Esto aumenta la representatividad y la validez de los resultados: cuando la población es pequeña y accesible, encuestar al total es metodológicamente superior a trabajar solo con una muestra.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Por qué el diseño es de campo y no documental? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">Porque los datos se recolectaron directamente de los sujetos investigados en su entorno natural — los estudiantes del 5to año en la propia institución — sin manipular variables ni trabajar solo con fuentes secundarias. Un diseño documental se basa en revisar textos, estudios previos o estadísticas existentes. Aquí se necesitaba conocer la realidad específica de este grupo de adolescentes en esta institución y en este momento: un cuestionario aplicado directamente a los actores es la única forma de obtener esos datos primarios.</div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Preguntas sobre resultados e intervención</div>
+
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Cuál fue el hallazgo más preocupante de la encuesta? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">El hallazgo más preocupante es el ítem 8: el 69% de los encuestados no sabía que la gonorrea puede infectar partes del cuerpo más allá de los genitales — como la garganta, los ojos, el recto y las articulaciones. Esto significa que aunque el 85% conoce el término, casi 7 de cada 10 no entienden cómo funciona realmente la enfermedad. Este desconocimiento es peligroso porque lleva a no reconocer síntomas atípicos — como dolor de garganta persistente o inflamación articular — como posibles manifestaciones de gonorrea, retrasando el diagnóstico y el tratamiento. El ítem 9 refuerza esto: el 63% tampoco conoce las consecuencias a largo plazo si no se trata a tiempo.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Por qué el 94% dice no conocer a nadie infectado si la enfermedad es tan frecuente? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">Porque la gonorrea carga un estigma social profundo que inhibe que las personas revelen su diagnóstico incluso a personas cercanas. Como se señala en la tesis, quien padece la enfermedad siente miedo al rechazo y vergüenza, lo que lleva al silencio. Además, muchos casos en Venezuela no llegan a centros de salud — las personas se automedican o acuden a farmacias — por lo que los casos no se registran ni se conocen públicamente. El ítem 7 no mide cuántos adolescentes están realmente infectados; mide cuántos están dispuestos a revelar que conocen a alguien infectado, que es una cifra muy diferente.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿En qué consistieron los folletos que distribuyeron? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">Los folletos o trípticos informativos fueron el instrumento de intervención educativa del tercer objetivo específico. Contenían información sobre qué es la gonorrea, cómo se transmite, cuáles son sus síntomas, cómo se diagnostica, cuáles son sus consecuencias y cuáles son los métodos anticonceptivos disponibles para prevenirla. Fueron diseñados para llegar a los adolescentes del 5to año de forma accesible y directa, como un recurso que pueden consultar fuera del aula. La distribución de folletos complementa el objetivo de "profundizar el comportamiento de los adolescentes sobre los métodos de prevención".</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-question" onclick="toggleQA(this)">¿Cuál es el aporte de esta investigación? <span class="qa-arrow">▼</span></div>
+      <div class="qa-answer">Teórico: documenta el nivel real de conocimiento sobre la gonorrea en adolescentes de 15-17 años de la institución, con datos primarios cuantificables — una base local que no existía previamente y que puede servir de antecedente a futuros estudios. Práctico: diseñó y distribuyó folletos informativos y propone la implementación de charlas de orientación sexual en la institución, respondiendo a la demanda del 98% de los encuestados. Social: visibiliza la brecha entre conocer el nombre de la enfermedad y entender cómo funciona, sus síntomas y sus consecuencias — brecha que puede costar la salud o la fertilidad de un adolescente. Metodológico: aplica una fórmula estadística para calcular la muestra y presenta resultados mediante gráficos cuantitativos, estableciendo un modelo replicable.</div>
+    </div>
+  </div>
+
+  <!-- ─── DATOS CLAVE ─── -->
+  <div id="datos" class="section">
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem;">Números que los seis deben conocer de memoria.</p>
+
+    <div class="data-grid">
+      <div class="data-stat"><div class="val">48</div><div class="lbl">estudiantes encuestados (población completa)</div></div>
+      <div class="data-stat"><div class="val">43</div><div class="lbl">muestra calculada con fórmula estadística</div></div>
+      <div class="data-stat"><div class="val">10</div><div class="lbl">ítems en el cuestionario</div></div>
+      <div class="data-stat"><div class="val">85%</div><div class="lbl">sabe qué es la gonorrea</div></div>
+      <div class="data-stat"><div class="val">90%</div><div class="lbl">conoce las ETS en general</div></div>
+      <div class="data-stat"><div class="val">100%</div><div class="lbl">cree importante conocer sobre enfermedades</div></div>
+      <div class="data-stat"><div class="val">73%</div><div class="lbl">necesita charlas sobre gonorrea</div></div>
+      <div class="data-stat"><div class="val">52%</div><div class="lbl">NO conoce los síntomas</div></div>
+      <div class="data-stat"><div class="val">69%</div><div class="lbl">NO sabe que infecta más allá de genitales</div></div>
+      <div class="data-stat"><div class="val">63%</div><div class="lbl">NO conoce consecuencias a largo plazo</div></div>
+      <div class="data-stat"><div class="val">98%</div><div class="lbl">apoya charlas de orientación sexual en el liceo</div></div>
+      <div class="data-stat"><div class="val">80M+</div><div class="lbl">casos anuales en el mundo</div></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">Fechas históricas clave <span class="badge badge-green">memorizar</span></div>
+      <div class="content">
+        <ul>
+          <li><strong>1500 a.C.:</strong> Primeros remedios griegos para secreciones urogenitales</li>
+          <li><strong>130 d.C.:</strong> Claudio Galeno acuña el nombre "Gonorrea" — Gonos (semilla) + Rhoia (flujo)</li>
+          <li><strong>1767:</strong> John Hunter diferencia la gonorrea de la sífilis</li>
+          <li><strong>1879:</strong> Albert Neisser (24 años) identifica la bacteria <em>Neisseria Gonorrhoeae</em></li>
+          <li><strong>1884:</strong> Hans Gram desarrolla la Tinción de Gram</li>
+          <li><strong>1940–1970:</strong> Llega la penicilina — tratamiento efectivo, hasta que la bacteria desarrolló resistencia</li>
+          <li><strong>2003:</strong> Gaceta Oficial 37.705 — Norma para atención integral en salud sexual y reproductiva</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Síntomas que deben dominar <span class="badge badge-blue">preguntas frecuentes</span></div>
+      <div class="content">
+        <ul>
+          <li><strong>Secreción uretral:</strong> Líquido espeso por el pene — amarillo, verde o blanco</li>
+          <li><strong>Disuria:</strong> Ardor o dolor intenso al orinar</li>
+          <li><strong>Dolor testicular:</strong> Hinchazón o dolor en uno o ambos testículos</li>
+          <li><strong>Aumento del flujo vaginal</strong></li>
+          <li><strong>Sangrado intermenstrual</strong></li>
+          <li><strong>En ojos:</strong> Dolor ocular, sensibilidad a la luz, secreción purulenta</li>
+          <li><strong>En garganta:</strong> Dolor persistente, inflamación de ganglios en el cuello</li>
+          <li><strong>En recto:</strong> Comezón anal, secreción tipo pus, sangre en papel higiénico</li>
+          <li><strong>Artritis séptica:</strong> Articulaciones calientes, enrojecidas, hinchadas y dolorosas</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Métodos diagnósticos</div>
+      <div class="content">
+        <ul>
+          <li><strong>Prueba de orina:</strong> Método más común — muestra en frasco estéril. Detecta bacteria en la uretra</li>
+          <li><strong>Hisopado:</strong> Hisopo largo para tomar muestra en la zona afectada</li>
+          <li><strong>Prueba de Amplificación de Ácidos Nucleicos (PAAN):</strong> La más precisa — detecta el ADN de la bacteria. Se hace con orina o hisopado</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Bases legales <span class="badge badge-purple">citar si el jurado pregunta</span></div>
+      <div class="content">
+        <ul>
+          <li><strong>Art. 83 CRBV:</strong> La salud es derecho social fundamental — obligación del Estado garantizarla</li>
+          <li><strong>Art. 84 CRBV:</strong> El Estado crea y gestiona un sistema de salud que prioriza la prevención, incluyendo ETS</li>
+          <li><strong>Art. 9 Ley Orgánica de Salud:</strong> El Ministerio de Salud es el órgano rector de prevención y control de enfermedades</li>
+          <li><strong>Art. 19 Ley Orgánica de Salud:</strong> Igualdad de acceso a la salud sin discriminación por condición médica</li>
+          <li><strong>Gaceta Oficial 37.705 (2003):</strong> Obliga a instituciones públicas y privadas a seguir lineamientos de prevención y educación sexual del Ministerio de Salud</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── CONSEJOS DE DEFENSA ─── -->
+  <div id="consejos" class="section">
+
+    <div class="card">
+      <div class="card-title">Antes de la defensa</div>
+      <div class="content">
+        <ul>
+          <li>Son 6 estudiantes — coordinen antes de entrar quién habla en cada momento. El jurado va a notar si se pisan la palabra o si hay silencios largos</li>
+          <li>Memoricen los <strong>12 datos clave</strong> de la pestaña anterior — especialmente los porcentajes de los ítems 5, 8 y 9</li>
+          <li>Practiquen decir correctamente el nombre: <strong><em>Neisseria Gonorrhoeae</em></strong> — es la bacteria causante y el jurado puede preguntar por ella</li>
+          <li>Orden sugerido: E1 abre con el planteamiento → E2 historia y definición → E3 tipos, causas y síntomas → E4 consecuencias y bases legales → E5 metodología y resultados 1–5 → E6 resultados 6–10 y cierre</li>
+          <li>Repasan juntos las preguntas de la pestaña anterior — especialmente la de la fórmula estadística y la de por qué encuestaron 48 si la fórmula dio 43</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Durante la exposición</div>
+      <div class="content">
+        <ul>
+          <li><strong>Hablen con seguridad y despacio</strong> — el jurado escucha y evalúa el dominio del tema, no la velocidad</li>
+          <li>Al presentar los gráficos, no lean solo el número — digan su significado: "El ítem 8 nos muestra que el 69% no sabía que la gonorrea infecta más allá de los genitales — lo cual confirma la necesidad de este estudio"</li>
+          <li>La bacteria siempre se llama <em>Neisseria Gonorrhoeae</em> — en itálicas si escriben, con énfasis si hablan</li>
+          <li>No digan "hicimos una entrevista" — usaron una <strong>encuesta con cuestionario cerrado de Sí/No</strong>. Son instrumentos diferentes</li>
+          <li>Nunca digan que la gonorrea "se contagia por baños públicos" — ni como ejemplo de lo que la gente cree, a menos que inmediatamente lo desmientan con la explicación de fragilidad externa</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Al responder preguntas del jurado</div>
+      <div class="content">
+        <ul>
+          <li>Estructura: <strong>respuesta directa → dato de la encuesta o dato histórico → implicación práctica</strong></li>
+          <li>Si el jurado pregunta sobre historia → E2. Tipos y síntomas → E3. Consecuencias y bases legales → E4. Fórmula estadística → E5. Resultados finales y conclusiones → E6</li>
+          <li>Si no saben una respuesta: "Eso constituye una limitación de nuestro estudio" o "Es una línea que queda abierta para futuras investigaciones" — nunca inventen</li>
+          <li>Si el jurado pregunta sobre el impacto emocional de la gonorrea: mencionen el miedo al rechazo, el aislamiento, la depresión y la ansiedad. Está en la tesis y es un aporte diferenciador del estudio</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <p>Frase de apertura sugerida para Indiana: "La gonorrea tiene más de 3.500 años de historia documentada. Durante siglos fue conocida como 'el aplauso' — un nombre que revela el estigma con que siempre se vivió. Hoy, en el 5to año de nuestra institución, decidimos investigarla no para avergonzar a nadie, sino para que nadie enferme por ignorancia."</p>
+    </div>
+
+    <div class="warn-box">
+      <p>Error común 1: Decir que la gonorrea "solo afecta los genitales" — eso contradice directamente el ítem 8 de su propia encuesta y el capítulo de consecuencias. Siempre mencionen garganta, ojos, recto y articulaciones. Error común 2: Confundir "muestra" con "población". La población es 48; la muestra calculada es 43. Encuestaron a los 48 porque la población era pequeña y accesible — eso es una fortaleza metodológica, no un error.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showAuthor(id) {
+    document.querySelectorAll('.author-content').forEach(a => a.classList.remove('active'));
+    document.querySelectorAll('.author-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('author-' + id).classList.add('active');
+    event.currentTarget.classList.add('selected');
+  }
+
+  function toggleQA(el) {
+    const answer = el.nextElementSibling;
+    const arrow  = el.querySelector('.qa-arrow');
+    document.querySelectorAll('.qa-answer').forEach(a => {
+      if (a !== answer) {
+        a.classList.remove('open');
+        a.previousElementSibling.querySelector('.qa-arrow').classList.remove('open');
+      }
+    });
+    answer.classList.toggle('open');
+    arrow.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>
